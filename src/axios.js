@@ -8,7 +8,7 @@ const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 export const API = axios.create({
     baseURL: `${APIURL}`,
     headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer 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`,
         'Content-Type': 'application/json',
       },
 });
