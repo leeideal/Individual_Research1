@@ -73,7 +73,7 @@ const Item2 = styled(motion.div)`
 const Item = styled(motion.div)`
     cursor: pointer;
     background-color: white;
-    padding: 6%;
+    padding: 12% 6%;
     margin-top: 15px;
     margin-left: 4%;
     margin-right: 4%;
@@ -255,30 +255,28 @@ function EmptyFence () {
     const openai = new OpenAIApi(configuration);
     const [toAi, setToAi] = useState(""); // 검색어
 
+
+    // 첫 검색결과가 넘어왔는지?
+    const [see ,setSee] = useState(false);
+
+
+    // ============================================================
+    // 시인검색
+
     // 시인 이름으로 검색한 경우 첫 openai 요청에 대한 값을 받아오는 리스트
     const [api1_Response, setApi1_Response] = useState([]);
-
-    // 어떤 버튼이 눌렸는지
-    const [see ,setSee] = useState(false);
-    const [content, setContent] = useState(false);
-
-
     const onValid = async(data) => {
-        let how = ""
-        if (toggle){
-            how = "PUBLIC"
-        }else{
-            how = "PRIVATE"
+        // 음악을 받을지 말지
+        let how = true
+        if (!toggle){
+            how = false
         }
-        const result = {
-            "content" : data.write,
-            "status" : how
-        }
+
         setToAi(data.write);
         try {
             const result = await openai.createCompletion({
               model: "text-davinci-003",
-              prompt: `${data.write}의 대표적인 시 3개 알려줘`,
+              prompt: `시인 ${data.write}의 작품중에서 3편만 알려줘`,
               temperature: 0.5,
               max_tokens: 4000,
             });
@@ -298,6 +296,35 @@ function EmptyFence () {
         setValue("write", "")
     }
 
+    // 아이템 박스 나오면 클릭시 시 전문 보여주기
+    const [realContent, setRealContent] = useState(null);
+    const [content, setContent] = useState(false);  // 아이템 박스를 보여줄지 말지
+    const nameClick = async(name, title) => {
+        try {
+            const result = await openai.createCompletion({
+              model: "text-davinci-003",
+              prompt: `${name}의 ${title} 전문만 알려줘`,
+              temperature: 0.5,
+              max_tokens: 4000,
+            });
+            const sentence = result.data.choices[0]
+            // const sentence = result.data.choices[0].text
+            // const regex = /\d+\.\s(.+)/g;
+            // const matches = [...sentence.matchAll(regex)];
+            // const resultList = matches.map(match => match[1]);
+
+            console.log("realContent",sentence);
+            setContent(i => !i);
+
+          } catch (e) {
+            //console.log(e);
+            setApi1_Response(["return값 없음"]);
+        }
+    }
+
+    // ============================================================
+
+    // 색 커스터마이징
     const iscolor = useRecoilValue(isColor)
 
     return(
@@ -323,6 +350,7 @@ function EmptyFence () {
                             variants={innerVariants}
                             initial = "start"
                             exit = "leaving"
+                            onClick={()=>nameClick(toAi, i)}
                             >
                             <ItemDate>{toAi}</ItemDate>
                             <ItemBody>{i}</ItemBody>

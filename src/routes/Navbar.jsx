@@ -1,6 +1,4 @@
 import styled, { css } from 'styled-components';
-import { useEffect } from 'react';
-import $ from 'jquery';
 import logoImg from "../components/img/logo.png";
 import { useMatch } from "react-router";
 import { useNavigate } from 'react-router-dom';
@@ -88,39 +86,13 @@ const Alarm = styled.div`
     border: 2px solid white;
     border-radius: 15px;
 `
-const DropDown = styled.ul`
-    display: none;
-    position: absolute;
-    top: 30px;
-    left:20px;
-    background-color: #ffffff;
-    width: 110px;
-    margin-top: 16px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    color: ${props => props.theme.navBackColor};
-    text-align: center;
-`
-
-const DropDownList = styled.li`
-    padding: 12px 16px;
-    font-size:13px;
-    &:hover {
-        background-color: #f5f5f5;
-        border-radius: 5px;
-    }
-`
 
 function NavBar () {
     const navigate = useNavigate()
-    const emotionMatch = useMatch("/emotion/*")
+    const emotionMatch = useMatch("/poem")
     const mainMatch = useMatch("/");
     // 로그인 했는지 안했는지
     const logCheck = localStorage.getItem("token") || sessionStorage.getItem("token")
-
-    
-
-    let lastScrollY = 0;
    
 
     const logOut = () => {

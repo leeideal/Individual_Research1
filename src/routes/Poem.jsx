@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import PageHeader from "../components/PageHeader";
-import EmptyFence from '../components/emptyemotion/EmptyFence';
+import EmptyFence from '../components/poem/EmptyFence';
 
 const Container = styled.body`
     width: 100vw;
@@ -23,7 +23,7 @@ const pageheader = {
 }
 
 
-function EmptyEmotion() {
+function Poem() {
     return (
         <Container>
             <Wrapper>
@@ -34,4 +34,4 @@ function EmptyEmotion() {
     );
 }
 
-export default EmptyEmotion;
+export default Poem;

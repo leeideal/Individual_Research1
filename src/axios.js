@@ -1,13 +1,16 @@
 import axios from "axios";
 
-export const APIURL = "172.17.202.1"
+export const APIURL = "https://api.openai.com/v1/chat/completions"
+
+const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
 // 로그인이 안되어있는 경우에 사용하는 API(토큰이 없는경우 요청)
 export const API = axios.create({
-    baseURL: `http://${APIURL}:8080`,
-    headers:{
-        "Content-Type": "application/json",
-    },
+    baseURL: `${APIURL}`,
+    headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
 });
 
 
