@@ -6,7 +6,7 @@ const Container = styled.body`
     display: flex;
     justify-content: center;
     background-color: ${props => props.theme.footerBackColor};
-    height: 220px;
+    height: 180px;
 `
 
 const Wrapper = styled.section`
@@ -67,31 +67,15 @@ function Footer() {
                 <Logo onClick={gotoTop} src={logoImg} />
             </Item>
             <Item>
-                ⓒ 2022 한울 All Rights Reserved
+                ⓒ 2023 한울 All Rights Reserved
             </Item>
             <Item>
                 <Items>
                     <Part>
-                        기획자, 디자이너
+                        기획자&디자이너, 개발
                     </Part>
                     <Name>
-                        이영서
-                    </Name>
-                </Items>
-                <Items>
-                    <Part>
-                        프론트엔드 개발자
-                    </Part>
-                    <Name>
-                        이상돈  이보경
-                    </Name>
-                </Items>
-                <Items>
-                    <Part>
-                        백엔드 개발자
-                    </Part>
-                    <Name>
-                        안석환  정민주  홍석주
+                        이상돈
                     </Name>
                 </Items>
             </Item>
