@@ -10,6 +10,15 @@ import fenceImg5 from "../img/pfence.png"
 import { API, LogAPI } from "../../axios";
 import { useRecoilValue } from 'recoil';
 import { isColor } from "../../atoms";
+import ReactAudioPlayer from 'react-audio-player';
+import m1 from "../testa/1.mp3";
+import m2 from "../testa/2.mp3";
+import m3 from "../testa/3.mp3";
+import m4 from "../testa/4.mp3";
+import m5 from "../testa/5.mp3";
+import m6 from "../testa/6.mp3";
+import m7 from "../testa/7.mp3";
+import SpotifyWebApi from 'spotify-web-api-js';
 
 
 const Container = styled.section`
@@ -148,7 +157,7 @@ const Toggle = styled(motion.div)`
     background-color: ${(props) => props.isActive ? props.theme.toggleBtnBackColor : "#DADADA"};
     border: 2px solid ${(props) => props.isActive ? props.theme.toggleBtnBorderColor : "#D0D0D0"};
     height: 40px;
-    width: 80px;
+    width: 90px;
     border-radius: 30px;
     display: flex;
     align-items: center;
@@ -160,7 +169,7 @@ const Toggle = styled(motion.div)`
 `
 
 const TrueToggle = styled.div`
-    
+    margin-left: 5px;
 `
 
 const FalseToggle = styled.div`
@@ -223,6 +232,17 @@ const { Configuration, OpenAIApi } = require("openai");
 
 
 function EmptyFence () {
+    
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri: process.env.REDIRECT_URI,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+    })
+
+    
+
+
+
     const [toggle, setToggle] = useState(false);
     const { register, handleSubmit, setValue } = useForm();
     const dragConstraints = useRef(null);
@@ -247,6 +267,12 @@ function EmptyFence () {
     // 첫 검색결과가 넘어왔는지?
     const [see ,setSee] = useState(false);
 
+    const audioRef = useRef(null);
+    const [audioFile, setAudioFile] = useState("m1");
+
+
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [tracks, setTracks] = useState([]);
 
     // ============================================================
     // 시인검색
@@ -311,6 +337,9 @@ function EmptyFence () {
                 setSee(i=>!i);
                 setContent(i => !i);
                 setReTry(i => !i);
+                if(toggle){
+                    audioRef.current.play()
+                }
     
               } catch (e) {
                 //console.log(e);
@@ -334,6 +363,9 @@ function EmptyFence () {
                 setSee(i=>!i);
                 setContent(i => !i);
                 setReTry(i => !i);
+                if(toggle){
+                    audioRef.current.play()
+                }
     
               } catch (e) {
                 //console.log(e);
@@ -343,6 +375,7 @@ function EmptyFence () {
         }
         
     }
+
 
     const nameClick = async(name, title) => {
         try {
@@ -360,19 +393,42 @@ function EmptyFence () {
             console.log("line",line)
             setContent(i => !i);
             setReTry(i => !i);
-
+            if(toggle){
+                audioRef.current.play()
+            }
           } catch (e) {
             //console.log(e);
             setApi1_Response(["return값 없음"]);
         }
+
+        if (loggedIn) {
+            // 로그인되면 사용자 플레이리스트 트랙을 가져옴
+            spotifyApi.getUserPlaylists()
+              .then((response) => {
+                const playlistId = response.items[0].id; // 첫 번째 플레이리스트 ID 사용
+      
+                spotifyApi.getPlaylistTracks(playlistId)
+                  .then((response) => {
+                    setTracks(response.items.map((item) => item.track));
+                  })
+                  .catch((error) => {
+                    console.error('Error fetching playlist tracks', error);
+                  });
+              })
+              .catch((error) => {
+                console.error('Error fetching user playlists', error);
+              });
+          }
     }
     //console.log(realContent)
 
+    useEffect(()=>{
+        setAudioFile(`m${Math.floor(Math.random() * 11) + 1}`)
+    },[])
     // ============================================================
 
     // 색 커스터마이징
     const iscolor = useRecoilValue(isColor)
-
 
     // ============================================================
     return(
@@ -439,6 +495,19 @@ function EmptyFence () {
                 </>
                 }
             </Form>
+            <audio ref={audioRef} controls style={{display:"none"}}>
+                <source src={m7} type="audio/ogg"/>
+                <source src={m7} type="audio/mpeg"/>
+                이 문장은 여러분의 브라우저가 audio 태그를 지원하지 않을 때 화면에 표시됩니다!
+            </audio>
+            {/* <audio id="audio" ref={audioRef} src={audioFile} >dd</audio> */}
+            {/* <ReactAudioPlayer
+                src='../../audio/1.mp3'
+                autoPlay
+                controls
+                ref={audioRef}
+                
+            /> */}
         </Container>
     )
 }

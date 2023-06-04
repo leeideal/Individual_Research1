@@ -153,11 +153,7 @@ function SignUpBox () {
             password: data.pw,
         };
         try{
-            await API.post('/api/v1/user/sign-up', result).then(
-                response => {
-                    console.log(response);
-                }
-            )
+            //localStorage.setItem("token", result.username);
             navigate("/login");
         } catch(error){
             console.log(error)
